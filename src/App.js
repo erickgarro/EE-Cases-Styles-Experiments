@@ -9,6 +9,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { CookiesProvider, useCookies } from 'react-cookie';
+import Questions from './experiment/Questions.js';
+
 
 /*
  * This is the main component of the application.
