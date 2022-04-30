@@ -8,9 +8,18 @@
 
 import logo from './logo.svg';
 import './App.css';
-import { CookiesProvider, useCookies } from 'react-cookie';
-import Questions from './experiment/Questions.js';
 
+import {useState, useContext} from "react";
+import { CookiesProvider, useCookies } from 'react-cookie';
+import { createQuestions } from './experiment/Questions.js';
+require('typeface-open-sans')
+
+function getOption() {
+  return (<div className='option'>
+    <button className='wrong'><span className='word1'>good</span><span className='word2'>Mood</span></button>
+  </div>
+  );
+}
 
 /*
  * This is the main component of the application.
@@ -18,13 +27,15 @@ import Questions from './experiment/Questions.js';
 */
 function App() {
   const [userId, setUserId] = useCookies();
+  const [context, setContext] = useState(null);
+  const [questions, setQuestions] = useState(createQuestions());
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
 
   /*
    * This function creates a unique user id. The cookie expires after 30 days.
    *
    * @returns {string} - The user id.
   */
-
   function createUserId() {
     const userId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     setUserId('userId', userId, {expires: new Date(Date.now() + 2592000000) });
@@ -57,25 +68,35 @@ function App() {
   getUserIdOnLoad();
 
   return (
+    // context provider
+
     <CookiesProvider>
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <p>
-            {getUserId()}
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {/*    {getUserId()}*/}
+
+        <div className="container">
+          <div className="control">
+            <p>Task 1 of 2</p>
+          </div>
+          <div className="words">
+            <h1>good mood</h1>
+          </div>
+          <div className="answers">
+            <div className='options-container'>
+              {currentQuestion.options.map(getOption)}
+            </div>
+          </div>
+
+          <p className="feedback"> Well done!</p>
+
+          <div className="action">
+            {/*continue button*/}
+            <button className="continue">Continue</button>
+          </div>
+          <div class="footer">
+
+          </div>
+        </div>
       </div>
     </CookiesProvider>
   );

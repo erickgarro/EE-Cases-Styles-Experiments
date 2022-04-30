@@ -96,13 +96,39 @@ export default class Questions {
 
 }
 
+/* This function shuffles the order of the content of an array
+* 
+* @param {Array} array - Array to be shuffled
+* @returns {Array} - Shuffled array
+*/
+export function shuffleArray(array) {
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+
 /*
  * This method is responsible for the creation of the questions.
  * It returns an array of questions.
  *
  * @returns {Questions[]} - Array of questions.
  */
-function createQuestions() {
+export function createQuestions() {
   let questions = [];
   let options = [];
   let words = [];
@@ -120,6 +146,7 @@ function createQuestions() {
     new Option(1 + '.' + 3, ["telotaxi","if","soup"], false),
     new Option(1 + '.' + 4, ["telophase","is","sour"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('1', words, caseStyle, color, options));
 
   // Question 2
@@ -132,6 +159,7 @@ function createQuestions() {
     new Option(2 + '.' + 3, ["vinyl","taint"], false),
     new Option(2 + '.' + 4, ["vinyl","saint"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('2', words, caseStyle, color, options));
 
   // Question 3
@@ -144,6 +172,7 @@ function createQuestions() {
     new Option(3 + '.' + 3, ["handy","sandy"], false),
     new Option(3 + '.' + 4, ["handy","cindy"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('3', words, caseStyle, color, options));
 
   // Question 4
@@ -156,6 +185,7 @@ function createQuestions() {
     new Option(4 + '.' + 3, ["file","hot","found"], false),
     new Option(4 + '.' + 4, ["file","not","sound"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('4', words, caseStyle, color, options));
 
   // Question 5
@@ -168,6 +198,7 @@ function createQuestions() {
     new Option(5 + '.' + 3, ["draw","coffee","now"], false),
     new Option(5 + '.' + 4, ["brew","toffee","now"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('5', words, caseStyle, color, options));
 
   // Kebab Case - Chromatic
@@ -181,6 +212,7 @@ function createQuestions() {
     new Option(6 + '.' + 3, ["apoplexy","loud"], false),
     new Option(6 + '.' + 4, ["apoplexy","cloud"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('6', words, caseStyle, color, options));
 
   // Question 7
@@ -193,6 +225,7 @@ function createQuestions() {
     new Option(7 + '.' + 3, ["marrons","polyphagia"], false),
     new Option(7 + '.' + 4, ["marrows","polyphone"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('7', words, caseStyle, color, options));
 
   // Question 8
@@ -205,6 +238,7 @@ function createQuestions() {
     new Option(8 + '.' + 3, ["dark","sine","buy"], false),
     new Option(8 + '.' + 4, ["dart","side","guy"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('8', words, caseStyle, color, options));
 
   // Question 9
@@ -217,6 +251,7 @@ function createQuestions() {
     new Option(9 + '.' + 3, ["biotin","mnemonic"], false),
     new Option(9 + '.' + 4, ["biotrin","anemone"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('9', words, caseStyle, color, options));
 
   // Question 10
@@ -229,6 +264,7 @@ function createQuestions() {
     new Option(10 + '.' + 3, ["modal","horsiness","size"], false),
     new Option(10 + '.' + 4, ["medal","horizontal","size"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('10', words, caseStyle, color, options));
 
   // Camel Case - Monochromatic
@@ -242,6 +278,7 @@ function createQuestions() {
     new Option(11 + '.' + 3, ["sad","Suer"], false),
     new Option(11 + '.' + 4, ["set","User"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('11', words, caseStyle, color, options));
 
   // Question 12
@@ -254,6 +291,7 @@ function createQuestions() {
     new Option(12 + '.' + 3, ["come","Clover"], false),
     new Option(12 + '.' + 4, ["came","Closer"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('12', words, caseStyle, color, options));
 
   // Question 13
@@ -266,6 +304,7 @@ function createQuestions() {
     new Option(13 + '.' + 3, ["rainbow","Kit"], false),
     new Option(13 + '.' + 4, ["raymond","Kif"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('13', words, caseStyle, color, options));
 
   // Question 14
@@ -278,6 +317,7 @@ function createQuestions() {
     new Option(14 + '.' + 3, ["has","Molten","Pass"], false),
     new Option(14 + '.' + 4, ["has","Golden","Path"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('14', words, caseStyle, color, options));
 
   // Question 15
@@ -290,6 +330,7 @@ function createQuestions() {
     new Option(15 + '.' + 3, ["megatons","Movers"], false),
     new Option(15 + '.' + 4, ["megaton","Mavies"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('15', words, caseStyle, color, options));
 
   // Camel Case - Chromatic
@@ -303,6 +344,7 @@ function createQuestions() {
     new Option(16 + '.' + 3, ["eudemons","Comae"], false),
     new Option(16 + '.' + 4, ["eudaemons","Combo"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('16', words, caseStyle, color, options));
 
   // Question 17
@@ -315,6 +357,7 @@ function createQuestions() {
     new Option(17 + '.' + 3, ["electrode","Shower","Night"], false),
     new Option(17 + '.' + 4, ["electron","Showel","Night"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('17', words, caseStyle, color, options));
 
   // Question 18
@@ -327,6 +370,7 @@ function createQuestions() {
     new Option(18 + '.' + 3, ["computerphobe","Uses"], false),
     new Option(18 + '.' + 4, ["computerphobed","Used"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('18', words, caseStyle, color, options));
 
   // Question 19
@@ -339,6 +383,7 @@ function createQuestions() {
     new Option(19 + '.' + 3, ["quantong","Denim"], false),
     new Option(19 + '.' + 4, ["quanting","Daemon"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('19', words, caseStyle, color, options));
 
   // Question 20
@@ -351,7 +396,9 @@ function createQuestions() {
     new Option(20 + '.' + 3, ["has","Now","Paid"], false),
     new Option(20 + '.' + 4, ["has","No","Path"], false),
   ];
+  options = shuffleArray(options);
   questions.push(new Questions('20', words, caseStyle, color, options));
 
+  shuffleArray(questions);
   return questions;
 }
