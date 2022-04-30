@@ -45,8 +45,9 @@ function App() {
     }
   }
 
-  /* this function return the user id
+  /* This function return the user id
 
+   *  @returns {string} - The user id.
    */
   function getUserId() {
     return userId.userId;
