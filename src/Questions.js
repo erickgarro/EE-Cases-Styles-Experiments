@@ -6,7 +6,7 @@
  * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
  */
 
-import Option from './Option';
+import Option from './experiment/Option';
 
 /*
  * Class: Questions
@@ -15,7 +15,7 @@ import Option from './Option';
  * The options are the possible answers to the question.
  *
  */
-export default class Questions {
+class Questions {
   constructor(id, words, caseStyle, color, options) {
     this.id = id;
     this.words = words;
@@ -101,7 +101,7 @@ export default class Questions {
 * @param {Array} array - Array to be shuffled
 * @returns {Array} - Shuffled array
 */
-export function shuffleArray(array) {
+function shuffleArray(array) {
   let currentIndex = array.length,
     temporaryValue,
     randomIndex;
@@ -128,7 +128,7 @@ export function shuffleArray(array) {
  *
  * @returns {Questions[]} - Array of questions.
  */
-export function createQuestions() {
+export default function createQuestions() {
   let questions = [];
   let options = [];
   let words = [];

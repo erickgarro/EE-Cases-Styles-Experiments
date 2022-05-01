@@ -10,6 +10,7 @@ import logo from './logo.svg';
 import './App.css';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import Questions from './experiment/Questions.js';
+import { useEffect, useState } from "@types/react";
 
 
 /*
@@ -18,42 +19,43 @@ import Questions from './experiment/Questions.js';
 */
 function App() {
   const [userId, setUserId] = useCookies();
+  const [questions, setQuestions] = useState();
 
-  /*
-   * This function creates a unique user id. The cookie expires after 30 days.
-   *
-   * @returns {string} - The user id.
-  */
+  // Fetch new user ID and questions
+  useEffect(async () => {
+    if (!userId.userId) {
+      try {
+        let response = await fetch(server + '/users/getId', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        let data = await response.json();
+        // Set cookie with expiration date after 30 days
+        setUserId('userId', data.userId, {expires: new Date(Date.now() + 2592000000) });
 
-  function createUserId() {
-    const userId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    setUserId('userId', userId, {expires: new Date(Date.now() + 2592000000) });
-    return userId;
-  }
+        // Fetch questions/get/ with the user ID to get the questions
+        response = await fetch(server + '/questions/generate/' + data.userId, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
 
-  /*
-   * This method finds out if the user has a cookie set with the user id.
-   * If the user has a cookie set, return the user id.
-   * If the user does not have a cookie set, create a new user id and return it.
-   *
-   */
-  function getUserIdOnLoad() {
-    if (userId.userId) {
-      return userId.userId;
+        data = await response.json();
+        setQuestions(data);
+        // Store questions in local storage
+        localStorage.setItem('questions', JSON.stringify(data));
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      return createUserId();
+      // Get questions from local storage
+      let data = JSON.parse(localStorage.getItem('questions'));
+      setQuestions(data);
     }
-  }
-
-  /* this function return the user id
-
-   */
-  function getUserId() {
-    return userId.userId;
-  }
-
-
-  getUserIdOnLoad();
+  }, []);
 
   return (
     <CookiesProvider>
