@@ -1,7 +1,6 @@
 .App {
   text-align: center;
-  /*text color red*/
-  color: #242424;
+  color: #4B4B4B;
 }
 
 .App-logo {
@@ -27,7 +26,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #242424;
+  color: #4B4B4B;
 }
 
 .App-link {
@@ -44,7 +43,7 @@
 }
 
 h1 h2 h3 h4 h5 h6 {
-  color: #242424;
+  color: #4B4B4B;
 }
 
 .options-container {
@@ -64,6 +63,7 @@ h1 h2 h3 h4 h5 h6 {
   font-size: 3rem;
   font-weight: bold;
   padding: 1em;
+  color: #4B4B4B;
 }
 
 .word1 {
@@ -91,7 +91,7 @@ h1 h2 h3 h4 h5 h6 {
 .container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 0.1fr 0.1fr 1fr 0.2fr 0.5fr 0.1fr;
+  grid-template-rows: 0.1fr 0.1fr 0.1fr 1fr 0.2fr 0.5fr 0.1fr;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   justify-items: center;
@@ -114,9 +114,13 @@ h1 h2 h3 h4 h5 h6 {
   outline: none;
 }
 
+.statement {
+  color: #a6a6a6;
+}
+
 .words {
   font-size: 2.7em;
-  color: #242424;
+  color: #4B4B4B;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -128,7 +132,7 @@ h1 h2 h3 h4 h5 h6 {
 
 .question {
   font-size: 1.5em;
-  color: #242424;
+  color: #4B4B4B;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -144,7 +148,7 @@ h1 h2 h3 h4 h5 h6 {
 
 .feedback {
   font-size: 1.5em;
-  color: #242424;
+  color: #4B4B4B;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -161,7 +165,7 @@ h1 h2 h3 h4 h5 h6 {
 .continue {
   background-color: #ffd700;
   border: none;
-  color: #242424;
+  color: #4B4B4B;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
