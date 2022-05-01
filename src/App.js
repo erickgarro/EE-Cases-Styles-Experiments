@@ -13,12 +13,8 @@ import { CookiesProvider, useCookies } from 'react-cookie';
 import createQuestions from './Questions';
 require('typeface-open-sans')
 
-function getOption() {
-  return (<div className='option'>
-    <button className='wrong'><span className='word1'>good</span><span className='word2'>Mood</span></button>
-  </div>
-  );
-}
+const server = process.env.REACT_APP_SERVER;
+// const server = process.env.REACT_APP_LOCAL_SERVER;
 
 /*
  * This is the main component of the application.
@@ -27,166 +23,110 @@ function getOption() {
 function App() {
   const [cookie, setCookie] = useCookies();
   const [questions, setQuestions] = useState({});
+  const [completedTasks, setTasks] = useState(0);
+  const [optionNumber, setOptionNumber] = useState(0);
+  const [hasAnswered, setHasAnswered] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState({});
   const [responses, dispatch] = useState(null); //ToDo: implement responses
-  let getQuestions = createQuestions();
+  let getOptionss = createQuestions();
 
-  // /*
-  //  * This function creates a unique user id. The cookie expires after 30 days.
-  //  *
-  //  * @returns {string} - The user id.
-  // */
-  // function createUserId() {
-  //   const cookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  //   setCookie('cookie', cookie, {expires: new Date(Date.now() + 2592000000) });
-  //   return cookie;
-  // }
-
-  // /*
-  //  * This method finds out if the user exists by assessing the existence of a cookie
-  //  * with the user ID. If the user has a cookie set, return the true.
-  //  * Otherwise, request new user ID, set the cookie, and return false.
-  //  *
-  //  * @returns
-  //  */
-  // function isUser() {
-  //   if(!cookie.cookie) {
-  //     createUserId();
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
-
-  /* This function return the user id
-   *
-   *  @returns {string} - The user id.
-   */
-  function getUserId() {
-    return cookie.cookie;
+  function getOneOption(option, colorType, colors, caseStyle) {
+    return (
+      <div key={option.id} className='option'>
+        <button id={option.id} className={`option ${hasAnswered ? `${(option.correct) ? 'correct' : 'wrong'}` : ''}`}>
+          <span className={`${colorType === 'chromatic' ? colors[0] : ''}`}>{option.words[0]}</span>
+          {(caseStyle === 'kebab') ? <span className={caseStyle === 'kebab' ? 'hyphen' : ''}>-</span>: ''}
+          <span className={`${colorType === 'chromatic' ? colors[1] : ''}`}>{option.words[1]}</span>
+          {(option.words.length > 2 && caseStyle === 'kebab') ? <span className={caseStyle === 'kebab' ? 'hyphen' : ''}>-</span>: ''}
+          {option.words.length === 3 && <span className={`${colorType === 'chromatic' ? colors[2] : ''}`}>{option.words[2]}</span>}
+        </button>
+      </div>
+    );
   }
 
-  // useEffect(async () => {
-  //   if (!cookie.cookie) {
-  //     const cookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  //     setCookie('userId', cookie, {expires: new Date(Date.now() + 2592000000) });
-  //     let questions = getQuestions();
-  //     setQuestions(questions);
-  //
-  //     const response = await fetch('http://localhost:8080/questions', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         cookie: getUserId(),
-  //         questions: getQuestions()
-  //       })
-  //     });
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } else {
-  //     const response = await fetch(`http://localhost:8080/questions/${cookie.cookie}`);
-  //     const data = await response.json();
-  //     setQuestions(data);
-  //   }
-  // }, [getQuestions, getUserId, setCookie, cookie.cookie]);
+  let colors = ['word1', 'word2', 'word3'];
+  colors.sort(() => Math.random() - 0.5);
 
-    //
-    // if (!isUser()){
-    //
-    //   setQuestions(getQuestions());
-    //   setCurrentQuestion(questions[0]);
-    // } else {
-    //   //get the questions from local storage
-    //   setQuestions(JSON.parse(localStorage.getItem('questions')));
-    //   setCurrentQuestion(questions[0]);
-    // }
-  // }, []);
+  function getOptions() {
+    return (
+      <div className="App">
+        <div className="container">
+          <div className="control">
+            <p>Task {hasAnswered + 1} of {questions.questions.length}</p>
+          </div>
+          <div className="words">
+            <h1>{questions.questions[completedTasks].words.join(' ')}</h1>
+          </div>
+          <div className="answers">
+            <div className='options-container'>
+              {
+                //map through the questions and get the options
+                questions.questions && questions.questions[completedTasks].options.map(option => {
+                      // getOneOption(option, colorType, colors, caseStyle)
+                  return getOneOption(option, questions.questions[completedTasks].color, colors, questions.questions[completedTasks].caseStyle);})
+              }
+            </div>
+          </div>
+         {success ? <div className={`feedback ${!hasAnswered ? 'hidden' : ''}`}>Well done!</div> :
+           <div className={`feedback ${!hasAnswered ? 'hidden' : ''}`}>Oops! Not quite right.</div>}
+          <div className="action">
+            {}
+            <button className={`continue ${!hasAnswered ? 'hidden' : ''}`}>Continue</button>
+          </div>
+          <div className="footer">
 
-useEffect(() => {
-  // useEffect to check if there is a cookie with the user id
-  if (!cookie.isUser) {
-    fetch('http://localhost:8080/questions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        cookie: getUserId(),
-        questions: getQuestions()
-      })
-    })
-    createUserId();
-    //store the questions in local storage
-    localStorage.setItem('questions', JSON.stringify(questions));
-  } else {
-    //get the questions from local storage
-    setQuestions(JSON.parse(localStorage.getItem('questions')));
-    setCurrentQuestion(questions[0]);
+          </div>
+        </div>
+      </div>
+    )
   }
-}, []);
 
+ // Fetch new user ID and questions
   useEffect(() => {
-    if (!cookie.cookie) {
-      const cookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      setCookie('cookie', cookie, {expires: new Date(Date.now() + 2592000000) });
-      let questions = getQuestions();
-      setQuestions(questions);
+    if (!cookie.userId) {
+      try {
+        async function fetchData() {
+          let response = await fetch(server + '/users/getId', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          let data = await response.json();
+          // Set cookie with expiration date after 30 days
+          setCookie('userId', data.userId, {expires: new Date(Date.now() + 2592000000) });
 
-      const response = fetch('http://localhost:8080/questions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          cookie: getUserId(),
-          questions: getQuestions()
-        })
-      });
-      const data = response.json();
-      console.log(data);
+          // Fetch questions/get/ with the user ID to get the questions
+          response = await fetch(server + '/questions/generate/' + data.userId, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          data = await response.json();
+          setQuestions(data => data);
+          localStorage.setItem('questions', JSON.stringify(data));
+        }
+        fetchData().then(r => console.log(r));
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      const response = fetch(`http://localhost:8080/questions/${cookie.cookie}`);
-      const data = response.json();
-      setQuestions(data);
+      // Get questions from local storage
+      setQuestions(() => JSON.parse(localStorage.getItem('questions')));
     }
-  }, [getQuestions, getUserId, setCookie, cookie.cookie]);
+  }, [setCookie, cookie.userId]);
 
 
   return (
     // <Context.provider value={{ questions, dispatch }}>
-    <Context.provider value={{}}>
+    // <Context.provider value={{}}>
       <CookiesProvider>
-        <div className="App">
-          {/*    {getUserId()}*/}
-
-          <div className="container">
-            <div className="control">
-              <p>Task 1 of 2</p>
-            </div>
-            <div className="words">
-              <h1>good mood</h1>
-            </div>
-            <div className="answers">
-              <div className='options-container'>
-                {/*{currentQuestion.options.map(getOption)}*/}
-              </div>
-            </div>
-
-            <p className="feedback"> Well done!</p>
-
-            <div className="action">
-              {/*continue button*/}
-              <button className="continue">Continue</button>
-            </div>
-            <div class="footer">
-
-            </div>
-          </div>
-        </div>
+        {questions.questions ? getOptions() : <h2>Loading...</h2>}
       </CookiesProvider>
-    </Context.provider>
+    // </Context.provider>
   );
 }
 

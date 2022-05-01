@@ -15,6 +15,10 @@
   }
 }
 
+.hidden {
+  visibility:hidden
+}
+
 .App-header {
   background-color: #f5f5f5;
   min-height: 100vh;
@@ -63,19 +67,19 @@ h1 h2 h3 h4 h5 h6 {
 }
 
 .word1 {
-  color: red;
+  color: #66CCEE;
 }
 
 .word2 {
-  color: blue;
+  color: #CCBB44;
 }
 
 .word3{
-  color: green;
+  color: #EE6677;
 }
 
-.hypen{
-  color: purple;
+.hyphen{
+  color: #228833;
 }
 
 .wrong span{
