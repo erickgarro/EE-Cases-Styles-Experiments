@@ -18,13 +18,13 @@ let responsesTemplate = {
   answers: {}
 };
 
-let userTemplate = {
-  id: '',
-  age : 0,
-  gender: '',
-  background: '',
-  gaveConsent: true
-};
+// let userTemplate = {
+//   id: '',
+//   age : 0,
+//   gender: '',
+//   background: '',
+//   gaveConsent: true
+// };
 
 let sortedColors = ['word1', 'word2', 'word3'];
 
@@ -60,7 +60,7 @@ function App() {
         console.log('Submitted');
       });
     }
-  }, [completedTasks, responses]);
+  }, [completedTasks, responses, userId]);
 
   useEffect(() => {
     // look for userId in localStorage
