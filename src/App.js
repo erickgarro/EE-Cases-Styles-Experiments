@@ -94,7 +94,7 @@ function App() {
         console.log('Submitted');
       });
     }
-  }, [completedTasks, responses, userId, nextStageController]);
+  }, [completedTasks, responses, userId]);
 
   useEffect(() => {
     // look for userId in localStorage
