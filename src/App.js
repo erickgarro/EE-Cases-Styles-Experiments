@@ -76,6 +76,19 @@ function App() {
         });
         const data = await response.json();
         console.log(data);
+        // if status code 200
+        if (data.status === 200) {
+          // delete all localStorage
+          localStorage.setItem('isDone', 'true');
+
+          localStorage.removeItem('currentTask');
+          localStorage.removeItem('questions');
+          localStorage.removeItem('completedTasks');
+          localStorage.removeItem('completedTutorialTasks');
+          localStorage.removeItem('responses');
+          localStorage.removeItem('tutorial');
+          nextStageController()
+        }
       }
       submitResponses().then(() => {
         console.log('Submitted');
@@ -96,6 +109,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    localStorage.setItem('completedTutorialTasks', '0');
     setCompletedTutorialTasks(() => 0);
 
     if (localStorage.getItem('userId')) {
@@ -242,12 +256,33 @@ function App() {
    * This function resets the state of the tutorial and sets the current stage to experiment
    */
   function finishTutorial() {
-    setCurrentStage(() => 'experiments');
-    localStorage.setItem('currentStage', 'tutorial-outro');
     localStorage.setItem('setCompletedTasks', '0');
     setCompletedTasks(() => 0);
     setHasAnswered(() => false);
     localStorage.setItem('completedTutorialTasks', 0);
+    nextStageController();
+  }
+
+  function copyToClipboard(href) {
+    const tempInput = document.createElement('input');
+    tempInput.value = href;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+  }
+
+  function shareViaEmail() {
+    const href = window.location.href;
+    const subject = 'Check out this experiment!';
+    const body = `Hey, just completed this cool experiment from some students at USI! Check it out: ${href}`;
+    window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+  }
+
+  function shareViaWhatsapp() {
+    const href = window.location.href;
+    const body = `Hey, just completed this cool experiment from some students at USI! Check it out: ${href}`;
+    window.open(`whatsapp://send?text=${body}`, '_blank');
   }
 
   /*
@@ -356,9 +391,9 @@ function App() {
   };
 
     /*
-     * This function generate the html code for the tutorial for the experiment
+     * This function generate the html code for the tutorial intro
      *
-     * @return {String} - The html code for the tutorial
+     * @return {String} - The html code for the tutorial intro
      */
     const getTutorialIntro = () => {
       return(
@@ -401,6 +436,68 @@ function App() {
             </div>
           </div>
           <div className="notice">
+          </div>
+        </div>
+      )
+    };
+
+    /*
+     * This function generate the html code for the tutorial outro
+     *
+     * @return {String} - The html code for the tutorial outro
+     */
+    const getTutorialOutro = () => {
+      return(
+        <div className="intro-container">
+          <div className="header">
+          </div>
+          <div className="text">
+
+          </div>
+          <div className="info">
+          </div>
+          <div className="button">
+            <h1>The experiment is about to begin!</h1>
+            <h3>We are ready when you are ready.</h3>
+
+            <div className="action">
+              <button className="continue" onClick={() => nextStageController()}>Start now</button>
+            </div>
+          </div>
+          <div className="notice">
+          </div>
+        </div>
+      )
+    };
+
+    /*
+     * This function generate the html code for the tutorial outro
+     *
+     * @return {String} - The html code for the tutorial outro
+     */
+    const getIsDone = () => {
+      return(
+        <div className="intro-container">
+          <div className="header">
+          </div>
+          <div className="text">
+
+          </div>
+          <div className="info">
+            <h1>Thank you for your support!</h1>
+            <h3>Your results were already transmitted to us.</h3>
+
+          </div>
+          <div className="button">
+            <h2>We hope you had fun!</h2>
+            <p>Please consider sharing our experiment</p>
+            <button className="continue" onClick={() => copyToClipboard(window.location.href)}>Copy URL</button>
+            <button className="continue" onClick={() => shareViaEmail()}>Share via email</button>
+            {/*this button shares the url via whatsapp*/}
+            <button className="continue" onClick={() => shareViaWhatsapp()}>Share via WhatsApp</button>
+          </div>
+          <div className="notice">
+            <p>You can now close this window.</p>
           </div>
         </div>
       )
@@ -466,7 +563,9 @@ function App() {
       {currentStage === 'intro' ? getIntro() : ''}
       {currentStage === 'tutorial-intro' ? getTutorialIntro() : ''}
       {currentStage === 'tutorial' ? getExperiments() : ''}
+      {currentStage === 'tutorial-outro' ? getTutorialOutro() : ''}
       {currentStage === 'experiments' ? getExperiments() : ''}
+      {currentStage === 'done' ? getIsDone() : ''}
     </div>
     )
   }
@@ -504,5 +603,6 @@ function App() {
       </>
   );
 }
+
 
 export default App;
