@@ -80,6 +80,7 @@ function App() {
         if (data.status === 200) {
           // delete all localStorage
           localStorage.setItem('isDone', 'true');
+          localStorage.setItem('currentStage', 'done');
 
           localStorage.removeItem('currentTask');
           localStorage.removeItem('questions');
@@ -87,14 +88,13 @@ function App() {
           localStorage.removeItem('completedTutorialTasks');
           localStorage.removeItem('responses');
           localStorage.removeItem('tutorial');
-          nextStageController()
         }
       }
       submitResponses().then(() => {
         console.log('Submitted');
       });
     }
-  }, [completedTasks, responses, userId]);
+  }, [completedTasks, responses, userId, nextStageController]);
 
   useEffect(() => {
     // look for userId in localStorage
