@@ -10,8 +10,8 @@ import './App.css';
 import {useState, useEffect} from "react";
 require('typeface-open-sans')
 
-// const server = process.env.REACT_APP_SERVER;
-const server = process.env.REACT_APP_LOCAL_SERVER;
+const server = process.env.REACT_APP_SERVER;
+// const server = process.env.REACT_APP_LOCAL_SERVER;
 
 let userTemplate = {
   userId: '',
