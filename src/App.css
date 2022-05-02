@@ -197,3 +197,22 @@ h1 h2 h3 h4 h5 h6 {
   transform: translateY(0);
   opacity: 0.6;
 }
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #4B4B4B;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.paragraph {
+  font-size: 1.2em;
+  color: #4B4B4B;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.notice {
+  font-size: 0.5em;
+  color: #4B4B4B;
+  font-family: 'Open Sans', sans-serif;
+}

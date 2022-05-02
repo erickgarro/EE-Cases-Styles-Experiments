@@ -38,7 +38,6 @@ function App() {
   const [currentTask, setCurrentTask] = useState(0);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [user, setUser] = useState(userTemplate);
   const [userId, setUserId] = useState(null);
   const [startTime, setStartTime] = useState(0);
   const [responses, setResponses] = useState(responsesTemplate);
@@ -62,29 +61,6 @@ function App() {
       });
     }
   }, [completedTasks, responses]);
-  // useEffect(() => {
-  //   if (localStorage.getItem('responses')) {
-  //     if (completedTasks === 20 && userId) {
-  //       try {
-  //         async function fetchData() {
-  //           const response = await fetch(`${server}/responses/submit/${userId}`, {
-  //             method: 'POST',
-  //             headers: {
-  //               'Content-Type': 'application/json'
-  //             },
-  //             body: JSON.stringify(responses)
-  //           });
-  //           const data = await response.json();
-  //           console.log(data);
-  //         }
-  //
-  //         fetchData().then(r => console.log(r));
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   }
-  // }, [completedTasks, responses, userId]);
 
   useEffect(() => {
     // look for userId in localStorage
