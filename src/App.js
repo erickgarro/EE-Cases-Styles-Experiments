@@ -7,13 +7,11 @@
  */
 
 import './App.css';
-import Context from './components/context';
 import {useState, useEffect} from "react";
-import { CookiesProvider, useCookies } from 'react-cookie';
 require('typeface-open-sans')
 
-const server = process.env.REACT_APP_SERVER;
-// const server = process.env.REACT_APP_LOCAL_SERVER;
+// const server = process.env.REACT_APP_SERVER;
+const server = process.env.REACT_APP_LOCAL_SERVER;
 
 let responsesTemplate = {
   user: {},
@@ -35,65 +33,107 @@ let sortedColors = ['word1', 'word2', 'word3'];
  * It is the entry point of the application.
 */
 function App() {
-  const [cookie, setCookie] = useCookies();
   const [questions, setQuestions] = useState({});
   const [completedTasks, setCompletedTasks] = useState(0);
-  const [currentTask, setCurrentTask] = useState(1);
+  const [currentTask, setCurrentTask] = useState(0);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [success, setSuccess] = useState(false);
   const [user, setUser] = useState(userTemplate);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [userId, setUserId] = useState(null);
+  const [startTime, setStartTime] = useState(0);
   const [responses, setResponses] = useState(responsesTemplate);
   const [colors, setColors] = useState(() => sortedColors.sort(() => Math.random() - 0.5));
 
-  // Fetch user ID and questions, either from the server or from the cookies and local storage
   useEffect(() => {
-    if (!cookie.userId) {
-      try {
-        async function fetchData() {
-          let response = await fetch(server + '/users/getId', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-          let data = await response.json();
-          // Set cookie with expiration date after 30 days
-          setCookie('userId', data.userId, {expires: new Date(Date.now() + 2592000000) });
-
-          // Fetch questions/get/ with the user ID to get the questions
-          response = await fetch(server + '/questions/generate/' + data.userId, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-
-          data = await response.json();
-          setQuestions(data => data);
-          localStorage.setItem('questions', JSON.stringify(data));
-        }
-        fetchData().then(r => console.log(r));
-      } catch (error) {
-        console.log(error);
+    if(completedTasks === 20) {
+      async function submitResponses () {
+        const response = await fetch(`${server}/responses/submit/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(responses)
+        });
+        const data = await response.json();
+        console.log(data);
       }
+      submitResponses().then(() => {
+        console.log('Submitted');
+      });
+    }
+  }, [completedTasks, responses]);
+  // useEffect(() => {
+  //   if (localStorage.getItem('responses')) {
+  //     if (completedTasks === 20 && userId) {
+  //       try {
+  //         async function fetchData() {
+  //           const response = await fetch(`${server}/responses/submit/${userId}`, {
+  //             method: 'POST',
+  //             headers: {
+  //               'Content-Type': 'application/json'
+  //             },
+  //             body: JSON.stringify(responses)
+  //           });
+  //           const data = await response.json();
+  //           console.log(data);
+  //         }
+  //
+  //         fetchData().then(r => console.log(r));
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   }
+  // }, [completedTasks, responses, userId]);
+
+  useEffect(() => {
+    // look for userId in localStorage
+    if (localStorage.getItem('userId')) {
+      setUserId(localStorage.getItem('userId'));
     } else {
-      // Get questions from local storage
-      setQuestions(() => JSON.parse(localStorage.getItem('questions')));
+      // if not found, generate a new one
+      const newUserId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('userId', newUserId);
+      setUserId(newUserId);
+    }
+  }, []);
 
-      // Get answers in progress from local storage
-      let localResponses = localStorage.getItem('responses');
-      if (localResponses) {
-        setResponses(() => JSON.parse(localResponses));
-      }
-      //Get setCompletedTasks from local storage
-      let localCompletedTasks = localStorage.getItem('completedTasks');
-      if (localCompletedTasks) {
-        setCompletedTasks(() => JSON.parse(localCompletedTasks));
-        setCurrentTask(() => JSON.parse(localCompletedTasks));
+  useEffect(() => {
+    if (localStorage.getItem('userId')) {
+      const id = localStorage.getItem('userId');
+
+      if (localStorage.getItem('questions')) {
+        setQuestions(JSON.parse(localStorage.getItem('questions')));
+      } else {
+        // if not found, fetch questions from server
+        async function fetchData() {
+          const response = await fetch(server + '/questions/get/' + id);
+          const data = await response.json();
+          localStorage.setItem('questions', JSON.stringify(data));
+          setQuestions(data);
+        }
+
+        fetchData().then(r => console.log(r));
       }
     }
-  }, [setCookie, cookie.userId]);
+  }, []);
+
+  useEffect(() => {
+    // check if there are already responses in localStorage
+    if (localStorage.getItem('responses')) {
+      setResponses(JSON.parse(localStorage.getItem('responses')));
+    }
+    //check if there are already completed tasks in localStorage
+    if (localStorage.getItem('completedTasks')) {
+      setCompletedTasks(JSON.parse(localStorage.getItem('completedTasks')));
+    }
+
+    // check if there is already a user in currentTask
+    if (localStorage.getItem('currentTask')) {
+      setCurrentTask(JSON.parse(localStorage.getItem('currentTask')));
+    }
+
+  }, []);
 
   /*
    * This function generate the html code for one option of a question
@@ -102,10 +142,10 @@ function App() {
    * @param {Number} index - The index of the option
    * @return {String} - The html code for the option
    */
-  function getOneOption(option, colorType, colors, caseStyle) {
+  const getOneOption = (option, colorType, colors, caseStyle) =>{
     return (
       <div key={option.id} className='option'>
-        <button className={`option ${hasAnswered ? `${(option.correct) ? 'correct' : 'wrong'}` : ''}`} onClick={() => handleWordSelection(option, currentTask)}>
+        <button className={`option ${hasAnswered ? `${(option.correct) ? 'correct' : 'wrong'}` : ''}`} onClick={() => handleWordSelection(option, currentTask + 1)}>
           <span className={`${colorType === 'chromatic' ? colors[0] : ''}`}>{option.words[0]}</span>
           {(caseStyle === 'kebab') ? <span className={(colorType === 'chromatic' && caseStyle === 'kebab') ? 'hyphen' : ''}>-</span>: ''}
           <span className={`${colorType === 'chromatic' ? colors[1] : ''}`}>{option.words[1]}</span>
@@ -116,12 +156,13 @@ function App() {
     );
   }
 
-  function getNexWord() {
+  const getNexWord = () =>{
     setSuccess(() => false);
     setHasAnswered(() => false);
     setCompletedTasks(() => completedTasks + 1);
     setCurrentTask(() => currentTask + 1);
     setColors(() => sortedColors.sort(() => Math.random() - 0.5));
+    setStartTime(() => new Date().getTime());
   }
 
   /*
@@ -129,7 +170,10 @@ function App() {
    *
    * @return {String} - The html code for the options
    */
-  function getOptions() {
+  const getOptions = () => {
+    if(startTime === 0) {
+      setStartTime(() => new Date().getTime());
+    }
 
     return (
       <div className="App">
@@ -170,27 +214,22 @@ function App() {
    */
   function handleWordSelection(option, taskId) {
     if (!hasAnswered) {
+      option.time = new Date().getTime() - startTime;
       setSuccess(() => option.correct);
       setHasAnswered(() => true);
-      option.time = 0;
       let selection = responses;
-      // add taskId as element of selection.response and assign option to it
+      localStorage.setItem('completedTasks', JSON.stringify(completedTasks + 1));
+      setStartTime(() => 0);
       selection.answers[taskId] = option;
       setResponses(() => selection);
       localStorage.setItem('responses', JSON.stringify(selection));
-      localStorage.setItem('completedTasks', JSON.stringify(completedTasks + 1));
-      //ToDo: add a timer to the task
     }
   }
 
-
   return (
-    // <Context.provider value={{ questions, dispatch }}>
-    // <Context.provider value={{}}>
-      <CookiesProvider>
-        {questions.questions ? getOptions() : <h2>Loading...</h2>}
-      </CookiesProvider>
-    // </Context.provider>
+      <>
+        {(currentTask < 20 && questions.questions) ? getOptions() : <div className="App"><div className="container"><h2>Loading...</h2></div></div>}
+      </>
   );
 }
 
