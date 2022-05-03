@@ -349,7 +349,7 @@ function App() {
           }}
           >
             <option value="">What is your age?</option>
-            <option value="17-">17 or less</option>
+            <option value="17-">11-17</option>
             <option value="18-24">18-24</option>
             <option value="25-34">25-34</option>
             <option value="35-44">35-44</option>
@@ -448,6 +448,7 @@ function App() {
               </p>
             </li>
           </ol>
+          <span>During the tutorial, you can change the zoom settings of your browser if the content on the screen is too big.</span>
         </div>
         <div className="info">
           <h4>Whenever you are ready, go ahead and start our short tutorial.</h4>
