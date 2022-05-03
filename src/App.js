@@ -349,6 +349,7 @@ function App() {
           }}
           >
             <option value="">What is your age?</option>
+            <option value="17-">17 or less</option>
             <option value="18-24">18-24</option>
             <option value="25-34">25-34</option>
             <option value="35-44">35-44</option>
@@ -383,6 +384,7 @@ function App() {
             <option value="">What is your background?</option>
             <option value="csu">Computer science undergraduate</option>
             <option value="csg">Computer science graduate</option>
+            <option value="hcs">High school student</option>
             <option value="ofu">Other fields undergraduate</option>
             <option value="ofg">Other fields graduate</option>
             <option value="wo">Without post-secondary studies</option>
