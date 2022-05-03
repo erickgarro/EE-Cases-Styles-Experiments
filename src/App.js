@@ -395,7 +395,7 @@ function App() {
               setConsent(() => !consent);
             }}
             />
-            <label htmlFor="consent">I agree to participate in this study and grant the organizers permission to process the information I am providing.</label>
+            <label htmlFor="consent">I agree to participate in this study and grant the researchers permission to process the information I am providing.</label>
           </div>
         </div>
         <div className="button">
@@ -537,7 +537,7 @@ function App() {
         </div>
         <div className="words">
           <>
-            <h1>{currentStage === 'tutorial' ? tutorial.questions[completedTasks].words.join(' ') : ''}</h1>
+            <h1>{currentStage === 'tutorial' ? tutorial.questions[currentTask].words.join(' ') : ''}</h1>
             <h1>{currentStage === 'experiments' ? questions.questions[completedTasks].words.join(' ') : ''}</h1>
           </>
         </div>
