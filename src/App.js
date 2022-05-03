@@ -10,8 +10,8 @@ import './App.css';
 import {useState, useEffect} from "react";
 require('typeface-open-sans')
 
-const server = process.env.REACT_APP_SERVER;
-// const server = process.env.REACT_APP_LOCAL_SERVER;
+// const server = process.env.REACT_APP_SERVER;
+const server = process.env.REACT_APP_LOCAL_SERVER;
 
 let userTemplate = {
   userId: '',
@@ -47,6 +47,7 @@ function App() {
   const [gender, setGender] = useState('');
   const [background, setBackground] = useState('');
   const [consent, setConsent] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [responses, setResponses] = useState(responsesTemplate);
   const [colors, setColors] = useState(() => sortedColors.sort(() => Math.random() - 0.5));
 
@@ -65,10 +66,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(completedTasks === 20) {
+    if(isDone) { // handle the fact that in the current implementation competedTasks is incremented when 'continue' is clicked
       async function submitResponses () {
         const response = await fetch(`${server}/responses/submit/${userId}`, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -76,9 +77,9 @@ function App() {
         });
         const data = await response.json();
         console.log(data);
-        // if status code 200
+
         if (data.status === 200) {
-          // delete all localStorage
+          // delete (almost) all the localStorage
           localStorage.setItem('isDone', 'true');
           localStorage.setItem('currentStage', 'done');
 
@@ -94,7 +95,7 @@ function App() {
         console.log('Submitted');
       });
     }
-  }, [completedTasks, responses, userId]);
+  }, [completedTasks, responses, userId, isDone]);
 
   useEffect(() => {
     // look for userId in localStorage
@@ -158,8 +159,9 @@ function App() {
     // check if there is already a user in currentTask
     if (localStorage.getItem('currentTask')) {
       setCurrentTask(() => JSON.parse(localStorage.getItem('currentTask')));
+      localStorage.setItem('currentTask', JSON.stringify(currentTask));
     }
-  }, []);
+  }, [currentTask]);
 
   /*
    * This function generate the html code for one option of a question
@@ -191,10 +193,14 @@ function App() {
     setSuccess(() => false);
     setHasAnswered(() => false);
     setCurrentTask(() => currentTask + 1);
+    localStorage.setItem('currentTask', JSON.stringify(currentTask));
     setColors(() => sortedColors.sort(() => Math.random() - 0.5));
     setStartTime(() => new Date().getTime());
 
     if(currentStage === 'tutorial' && completedTutorialTasks < tutorial.questions.length){
+      if(completedTutorialTasks + 1 === 20){
+        localStorage.setItem('isDone', JSON.stringify(true));
+      }
       setCompletedTutorialTasks(() => completedTutorialTasks + 1);
     } else {
       setCompletedTasks(() => completedTasks + 1);
@@ -239,6 +245,7 @@ function App() {
   function restartTutorial() {
     setCompletedTutorialTasks(() => 0);
     setCurrentTask(() => 0);
+    localStorage.setItem('currentTask', JSON.stringify(currentTask));
     setHasAnswered(() => false);
     setSuccess(() => false);
     setColors(() => sortedColors.sort(() => Math.random() - 0.5));
@@ -256,7 +263,7 @@ function App() {
    * This function resets the state of the tutorial and sets the current stage to experiment
    */
   function finishTutorial() {
-    localStorage.setItem('setCompletedTasks', '0');
+    localStorage.setItem('completedTasks', '0');
     setCompletedTasks(() => 0);
     setHasAnswered(() => false);
     localStorage.setItem('completedTutorialTasks', 0);
@@ -310,7 +317,7 @@ function App() {
           <p> We thank you for taking the time to join.</p>
           <h4>This study focuses on the readability of text and should
             not take more than 5-10 minutes to complete.</h4>
-          <h2>Notice</h2>
+          <h2>Informed consent</h2>
 
           <div className="notice">
            <p>We will record the information you might provide us in the dropdowns below and your answers to the tasks you will complete; none of which can be traced back to you.</p>
@@ -338,7 +345,7 @@ function App() {
             <option value="45-54">45-54</option>
             <option value="55-64">55-64</option>
             <option value="65+">65+</option>
-            <option value="0">Prefer not to say</option>
+            <option value="n/a">Prefer not to say</option>
           </select>
           <select id="gender" className={`drop-down ${consent && gender === '' ? 'drop-down-missing' : ''}`} required onChange={(e) => {
             setGender(() => e.target.value);
@@ -352,7 +359,7 @@ function App() {
             <option value="f">Female</option>
             <option value="m">Male</option>
             <option value="nbt">Non-binary / third gender</option>
-            <option value="0">Prefer not to say</option>
+            <option value="n/a">Prefer not to say</option>
           </select>
           <select id="background" className={`drop-down ${consent && background  === '' ? 'drop-down-missing' : ''}`} required onChange={(e) => {
             setBackground(() => e.target.value);
@@ -367,7 +374,7 @@ function App() {
             <option value="ofu">Other fields undergraduate</option>
             <option value="ofg">Other fields graduate</option>
             <option value="wo">Without post-secondary studies</option>
-            <option value="0">Prefer not to say</option>
+            <option value="n/a">Prefer not to say</option>
           </select>
         </div>
         <div className="consent">
@@ -458,7 +465,8 @@ function App() {
           </div>
           <div className="button">
             <h1>The experiment is about to begin!</h1>
-            <h3>We are ready when you are ready.</h3>
+            <h3>Now comes the real deal.</h3>
+            <h3>We are ready whenever you are.</h3>
 
             <div className="action">
               <button className="continue" onClick={() => nextStageController()}>Start now</button>
@@ -492,9 +500,9 @@ function App() {
             <h2>We hope you had fun!</h2>
             <p>Please consider sharing our experiment</p>
             <button className="continue" onClick={() => copyToClipboard(window.location.href)}>Copy URL</button>
-            <button className="continue" onClick={() => shareViaEmail()}>Share via email</button>
-            {/*this button shares the url via whatsapp*/}
             <button className="continue" onClick={() => shareViaWhatsapp()}>Share via WhatsApp</button>
+            <button className="continue" onClick={() => shareViaEmail()}>Share via email</button>
+
           </div>
           <div className="notice">
             <p>You can now close this window.</p>
@@ -544,13 +552,17 @@ function App() {
               <p className={`feedback ${!hasAnswered ? 'hidden' : ''}`}>Oops! Not quite right.</p>
               <br />
               <p className={`feedback ${localStorage.getItem('completedTutorialTasks') <= 2 ? 'hidden' : ''}`}>Ok, it wasn't perfect, but we can proceed.</p>
+              <br />
+              <p className={`feedback ${completedTasks >= 19 && hasAnswered ? '' : 'no-display'}`}>You completed all the tasks. Please click to finish the experiment</p>
+
             </div>}
 
 
             <div className="action">
-            <button className={`continue ${currentStage === 'tutorial' && localStorage.getItem('completedTutorialTasks') > 2 ? '' : 'no-display'}`} onClick={() => restartTutorial()}>Try again</button>
-            <button className={`continue ${!hasAnswered ? 'hidden' : ''} ${localStorage.getItem('completedTutorialTasks') >= tutorial.questions.length ? 'no-display' : ''}`} onClick={() => getNextWords()}>Continue</button>
-            <button className={`continue ${currentStage === 'tutorial' && localStorage.getItem('completedTutorialTasks') > 2 ? '' : 'no-display'}`} onClick={() => finishTutorial()}>Close tutorial and continue</button>
+            <button className={`continue-secondary ${currentStage === 'tutorial' && localStorage.getItem('completedTutorialTasks') > 2 ? '' : 'no-display'}`} onClick={() => restartTutorial()}>Try tutorial again</button>
+            <button className={`continue ${completedTasks < 19 && hasAnswered ? '' : 'no-display'} ${localStorage.getItem('completedTutorialTasks') >= tutorial.questions.length ? 'no-display' : ''}`} onClick={() => getNextWords()}>Continue</button>
+            <button className={`continue ${completedTasks >= 19 && hasAnswered ? '' : 'no-display'}`} onClick={() => nextStageController()}>Send results</button>
+            <button className={`continue ${currentStage === 'tutorial' && localStorage.getItem('completedTutorialTasks') > 2 ? '' : 'no-display'}`} onClick={() => finishTutorial()}>Continue to experiment</button>
           </div>
           <div className="footer">
           </div>
@@ -588,9 +600,12 @@ function App() {
       if(currentStage === 'experiments') {
         localStorage.setItem('completedTasks', JSON.stringify(completedTasks + 1));
         setStartTime(() => 0);
-        selection.answers[taskId] = option;
+        selection.answers[option.id.split('.')[0]] = option;
         setResponses(() => selection);
         localStorage.setItem('responses', JSON.stringify(selection));
+        if(completedTasks === 19) {
+          setIsDone(true);
+        }
       } else{
         localStorage.setItem('completedTutorialTasks', JSON.stringify(completedTutorialTasks + 1));
       }
@@ -599,7 +614,7 @@ function App() {
 
   return (
       <>
-        {(currentTask < 20 && questions.questions) ? getOptions() : <div className="App"><div className="container"><h2>Loading...</h2></div></div>}
+        {(completedTasks <= 20 && questions.questions) ? getOptions() : <div className="App"><div className="container"><h2>Loading...</h2></div></div>}
       </>
   );
 }
