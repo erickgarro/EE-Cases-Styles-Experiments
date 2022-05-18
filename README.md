@@ -1,6 +1,6 @@
 # EExp2  
 
-#### a.k.a. EE-Cases-Styles-Experiments-Frontend
+### a.k.a. EE-Cases-Styles-Experiments-Frontend
 
 This software was created as part of the Experimentation and Evaluation course of the BSc in Informatics at the Università della Svizzera italiana (USI) in Lugano, Switzerland.
 
@@ -135,3 +135,8 @@ In case you do not have Git installed, follow [this guide](https://github.com/gi
 The application assumes two researches will receive every participant’s results individually. The backend code can be modified to add or remove recipients, or to fully stop emails from being sent.
 
 **You can now share your site's URL with your participants.**
+
+<font size="2"> **Authors:**</font>
+<font size="2">Erick Garro Elizondo</font>
+<font size="2">Cindy Guerrero Toro</font>
+<font size="2">@USI, Lugano, Switzerland</font>
