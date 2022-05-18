@@ -1,70 +1,137 @@
-# Getting Started with Create React App
+# EExp2  
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### a.k.a. EE-Cases-Styles-Experiments-Frontend
 
-## Available Scripts
+This software was created as part of the Experimentation and Evaluation course of the BSc in Informatics at the Università della Svizzera italiana (USI) in Lugano, Switzerland.
 
-In the project directory, you can run:
+This study focuses on the following two letter case styles: **Camel case** contains a collection of words separated by an uppercase character instead of a space. The capitalization of the first letter per word starts from the second word (e.g., thisIsCamelCase). **Kebab case**  comprises a collection of lowercase words separated by a hyphen (e.g., this-is-kebab-case). As part of our hypotheses, we wanted to test the effect of color on the readability of both cases, which we called **Color case**.
 
-### `npm start`
+We developed a web application to extend our capacity to reach potential participants and automate the collection of results. Architectonically, we divided it into backend and frontend to separate concerns and improve maintainability.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Type of study:** Experiment
+**Number of factors:** Multi-Factor Design
+_Within Subject Design_
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+If you wish to replicate the experiment, feel free to clone the repository.
 
-### `npm test`
+Below you can find a description of the frontend and the instructions to set it up to run the experiment.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can also need the [source code for the backend](https://github.com/erickgarro/EE-Cases-Styles-Experiments-Backtend) on Github.
 
-### `npm run build`
+### Frontend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The user interface (UI) was designed as a single-page application in a minimalistic style to reduce distracting elements that could interfere with the participants’ concentration during the experiments.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+It was structured in the following stages:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Introduction and informed consent explaining:**
 
-### `npm run eject`
+- The purpose of the project in one sentence What data is collected, and how it is used.
+- Anonymization of data Explanation of the rights of the participant.
+- Consent request and collection of age, gender, and academic background of the participant Identification of the university, the course, and the researchers
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. **Quick tutorial instructions:**
+The tutorial instructions consist of four steps. These describe what will appear on the screen and its position, the specifications on what the participant should do, and how to interact with the UI.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Tutorial:**
+This section aims to familiarize the participant with the visual, conceptual, and mechanical logic of the experiment. There are three tasks: one with a camel case, one with a kebab case, and one with a color camel case. The application gives feedback on the result of the participant’s selection.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Experiment preamble:**
+A quick pause to allow the participants to get mentally ready to perform the actual experiment.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+5. **Experiment:**
+Twenty randomized tasks functionally identical to the ones in the tutorial.
 
-## Learn More
+6. **Done:**
+Thank you and share Used to thank the participant for joining the study Buttons to share the experiment’s URL by copying the URI to the clipboard, WhatsApp, and email.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+React version 18.1.0 was used to allow dynamic generation of all HTML content. A combination of state control and local storage data persistence enabled the application to anonymously "remember" the user, the stage in which the participant is, the questions, the responses, and other flow control variables.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The React components and functionality, in general, were designed considering further implementation of additional style cases. However, simple modifications solely on the frontend are needed.
 
-### Code Splitting
+#### Frontend: Inner workings
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The UI checks if an ID is already stored in the browser’s local storage upon loading the website. If it does not find one, it will request the backend to generate a random unique ID.
 
-### Analyzing the Bundle Size
+If there was a previous ID after the new ID is received, the UI checks if a stringified JSON object contains the tasks (questions) assigned to the user. If it does not find it, proceeds to ask the server to generate one. In the same way, it looks for the tasks for the tutorial.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+On every click of the continue button that appears asking the user to proceed, the stage is updated to the next one, and at the same time, and persists it in the local storage.
 
-### Making a Progressive Web App
+Everything described above allows the application to show the content.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Getting the source code
 
-### Advanced Configuration
+**For local execution:**
+Open a terminal on your computer and navigate to the folder where you want to download the code. Then, type the following command:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+`git clone https://github.com/erickgarro/EE-Cases-Styles-Experiments-Frontend.git`
 
-### Deployment
+The following folders will be created
+`EE-Cases-Styles-Experiments-Frontend`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**For cloud execution:**
+Follow your repository provider’s instructions to create a fork within your account.
 
-### `npm run build` fails to minify
+### Environmental variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+You run the backend and the frontend locally, or on the cloud. You need to set the following environmental variables to access the backend:
+
+For local execution:
+`REACT_APP_SERVER=http://localhost:3000`
+
+For cloud execution:
+`REACT_APP_SERVER=<backend-server-URL>[<:PORT NUMBER>]`
+
+The enclosing `< >` denote a required value and `[ ]` refer to an optional value. These characters must be excluded.
+
+In case you run it locally and need help setting the variables, follow the instructions below corresponding to your system. To set them for a cloud, skip this section:
+
+- [Linux](https://www.alibabacloud.com/blog/a-guide-on-environment-variable-configuration-in-linux_59842)
+
+- [macOS](https://support.apple.com/guide/terminal/use-environment-variables-apd382cc5fa-4f58-4449-b20a-41c53c006f8f/mac)
+
+- [Windows](https://docs.oracle.com/en/database/oracle/machine-learning/oml4r/1.5.1/oread/creating-and-modifying-environment-variables-on-windows.html)
+
+### Frontend setup  
+
+If do not have a [Netlify](https://netlify.com) account, proceed and [open a new one](https://app.netlify.com/signup).
+
+Then follow the step-by-step guide: [Deploying on Netlify](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/).
+
+You can setup your environmental variable during the setup of your site, or afterward by accessing your at
+`https://app.netlify.com/sites/\<sitename\>/settings/deploys#environment`
+
+Netlify will build and deploy the site for you. In the account dashboard, the deployment status will be displayed indicating if the site is up and running.
+
+You can now share your site’s URL with your participants.  
+
+**For local execution:**
+
+1. Navigate to the frontend folder by typing:
+   `cd EE-Cases-Styles-Experiments-Frontend`
+
+2. To download and install all the dependencies execute:  
+    `yarn install`
+
+3. Make sure you run the backend server prior to running the frontend. To start this server execute:  
+    `yarn start`  
+
+When notified that port 3000 is in use, type "Y" to initialize another port, most likely it will be `3001`.
+
+The server is now accessible at [http://localhost:3001](http://localhost:3001)
+
+If Yarn is not installed on your computer, follow [this guide](https://classic.yarnpkg.com/lang/en/docs/install).
+
+### Running the applications on the cloud
+
+The application was optimized to run on remote servers, specifically [Digital Ocean](https://digitalocea.com/) for the backend.
+
+You are be able to run it using other providers but you might need to modify the code accordingly.
+
+To start, you need to fork both repositories. If you have a GitHub account follow [this guide](https://docs.github.com/en/get-started/quickstart/fork-a-repo) if needed, otherwise, you need to clone the repositories and push them as new ones where you do your version control.
+
+In case you do not have Git installed, follow [this guide](https://github.com/git-guides/install-git).
+
+The application assumes two researches will receive every participant’s results individually. The backend code can be modified to add or remove recipients, or to fully stop emails from being sent.
+
+**You can now share your site's URL with your participants.**
