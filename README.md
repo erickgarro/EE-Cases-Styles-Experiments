@@ -138,7 +138,6 @@ The application assumes two researches will receive every participant’s result
 
 **You can now share your site's URL with your participants.**
 
-<font size="2"> **Authors:**</font>
-<font size="2">Erick Garro Elizondo</font>
-<font size="2">Cindy Guerrero Toro</font>
-<font size="2">@USI, Lugano, Switzerland</font>
+ <font size="1"> **Authors:**</font>
+ <font size="1">Erick Garro Elizondo and Cindy Guerrero Toro</font>
+ <font size="1">@USI, Lugano, Switzerland</font>
