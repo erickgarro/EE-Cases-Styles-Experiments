@@ -120,6 +120,8 @@ When notified that port 3000 is in use, type "Y" to initialize another port, mos
 
 The server is now accessible at [http://localhost:3001](http://localhost:3001)
 
+**Important:** If you use the same computer for several participants, we recommend that you access the frontend by creating a new private/incognito window for each one, as the app is designed to prevent repeated participation by storing data in your browser's local storage.
+
 If Yarn is not installed on your computer, follow [this guide](https://classic.yarnpkg.com/lang/en/docs/install).
 
 ### Running the applications on the cloud
