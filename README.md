@@ -16,7 +16,7 @@ If you wish to replicate the experiment, feel free to clone the repository. A de
 
 Below you can find a description of the frontend and the instructions to set it up to run the experiment.
 
-You can also access the [source code for the backend](https://github.com/erickgarro/EE-Cases-Styles-Experiments-Backtend) on Github.
+You can also find the [source code for the backend](https://github.com/erickgarro/EE-Cases-Styles-Experiments-Backend) on Github.
 
 ### Frontend
 
